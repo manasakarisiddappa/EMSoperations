@@ -5,7 +5,7 @@ import { DialogTrigger } from "../ui/dialog";
 import EmpModalContent from "./EmpModalContent";
 import { useState } from "react";
 
-const EditEmployee = ({ refresh, data }) => {
+const EditEmployee = ({ refresh, refresh2, data }) => {
   const [openDialog, setOpenDialog] = useState(false);
 
   const handleEdit = (id, newdata) => {
@@ -14,6 +14,7 @@ const EditEmployee = ({ refresh, data }) => {
       .then((res) => {
         console.log(res.data);
         refresh();
+        refresh2();
       })
       .catch((err) => {
         console.log("error edit data", err);

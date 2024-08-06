@@ -26,8 +26,6 @@ const DeleteEmployee = ({ id, refresh }) => {
       });
   };
 
-  console.log(openDialog, "delete emp");
-
   return (
     <div>
       <Modal isOpen={openDialog} setIsOpen={setOpenDialog}>

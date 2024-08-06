@@ -28,7 +28,6 @@ const EmpModalContent = ({ handleOperation, data, setIsOpen }) => {
     let errors = {};
     fields.forEach((field) => {
       const value = formData[field.name];
-      console.log(value, formData);
 
       if (!value || (typeof value === "string" && value.trim() === "")) {
         errors[field.name] = `${field.label} is required`;
@@ -42,7 +41,7 @@ const EmpModalContent = ({ handleOperation, data, setIsOpen }) => {
   const handleCreation = () => {
     if (validate()) {
       if (data) {
-        handleOperation(formData);
+        handleOperation(data.id, formData);
       } else {
         handleOperation(formData);
       }
@@ -60,8 +59,6 @@ const EmpModalContent = ({ handleOperation, data, setIsOpen }) => {
   const handleChange = (name, value) => {
     setFormData({ ...formData, [name]: value });
   };
-
-  console.log(formData, errors, fields);
 
   return (
     <div>

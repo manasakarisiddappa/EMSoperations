@@ -7,7 +7,6 @@ import {
 import { empApi } from "@/services/apiConfig";
 import { useEffect, useState } from "react";
 import EditEmployee from "./EditEmployee";
-import { edit } from "./EmpInputFields";
 import DeleteEmployee from "./DeleteEmployee";
 
 function DisplayEmployee({ data, refresh }) {
@@ -21,7 +20,6 @@ function DisplayEmployee({ data, refresh }) {
       empApi
         .getOneData(expandedId)
         .then((res) => {
-          console.log("fetching");
           setDetails((prevDetails) => ({
             ...prevDetails,
             [expandedId]: res.data,
@@ -47,8 +45,6 @@ function DisplayEmployee({ data, refresh }) {
     }
   };
 
-  console.log(data, details, expandedId, details[expandedId]);
-
   return (
     <div className="flex justify-center">
       <Accordion type="single" collapsible className="w-1/2">
@@ -62,17 +58,39 @@ function DisplayEmployee({ data, refresh }) {
                 <p>Loading...</p>
               ) : details[emp.id] ? (
                 <div className="flex flex-col gap-2 items-center text-lg">
-                  <p>
+                  <div>
                     <strong>Name:</strong> {details[emp.id].name}
-                  </p>
-                  <p>
+                  </div>
+                  <div>
                     <strong>Age:</strong> {details[emp.id].age}
-                  </p>
-                  <p className="flex gap-3">
-                    <EditEmployee refresh={refresh} data={edit} />
+                  </div>
+                  {details[emp.id].department ? (
+                    <div>
+                      <strong>Department:</strong>{" "}
+                      {details[emp.id].department.name}
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                  {details[emp.id].projects.length ? (
+                    <div>
+                      <strong>Projects:</strong>
+
+                      {details[emp.id].projects.map((p) => (
+                        <span key={p.id}> {p.name} &nbsp;</span>
+                      ))}
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                  <div className="flex gap-3">
+                    <EditEmployee
+                      refresh={refresh}
+                      refresh2={fetchEmp}
+                      data={details[emp.id]}
+                    />
                     <DeleteEmployee refresh={refresh} id={emp.id} />
-                  </p>
-                  <p></p>
+                  </div>
                 </div>
               ) : (
                 <p>No details available</p>
