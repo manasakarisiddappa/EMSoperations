@@ -5,11 +5,9 @@ import { Button } from "../ui/button";
 import {
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogFooter,
-  DialogHeader,
-  DialogTitle,
 } from "@/components/ui/dialog";
+import ModalHeader from "../Modal/ModalHeader";
 
 const DepModalContent = ({ handleOperation, setIsOpen, data }) => {
   const [newDep, setNewDep] = useState("");
@@ -39,6 +37,10 @@ const DepModalContent = ({ handleOperation, setIsOpen, data }) => {
     }
   };
 
+  const handleOnFocus = () => {
+    setErrors("");
+  };
+
   const handleDialogClose = () => {
     setIsOpen(false);
     setErrors("");
@@ -48,12 +50,10 @@ const DepModalContent = ({ handleOperation, setIsOpen, data }) => {
   return (
     <>
       <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>{data ? "Edit" : "New"} Department</DialogTitle>
-          <DialogDescription>
-            Provide department name & Click save when youre done.
-          </DialogDescription>
-        </DialogHeader>
+        <ModalHeader
+          title={data ? "Edit Department" : "New Department"}
+          description="Provide department name & Click save when youre done."
+        />
 
         <div className="grid gap-4 py-4">
           {errors.name && (
@@ -67,6 +67,7 @@ const DepModalContent = ({ handleOperation, setIsOpen, data }) => {
             </Label>
             <Input
               id="name"
+              onFocus={handleOnFocus}
               value={newDep}
               className="col-span-3"
               onChange={(e) => setNewDep(e.target.value)}

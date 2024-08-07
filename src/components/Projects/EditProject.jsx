@@ -1,9 +1,10 @@
 import Modal from "../Modal/Modal";
 import { projApi } from "@/services/apiConfig";
-import { Button } from "../ui/button";
 import { DialogTrigger } from "../ui/dialog";
 import ProjectModalContent from "./ProjectModalContent";
 import { useState } from "react";
+import EditIcon from "../EditIcon/EditIcon";
+import { toast } from "react-toastify";
 
 const EditProject = ({ refresh, data }) => {
   const [openDialog, setOpenDialog] = useState(false);
@@ -13,10 +14,12 @@ const EditProject = ({ refresh, data }) => {
       .update(id, newdata)
       .then((res) => {
         console.log(res.data);
+        toast.success(res.msg);
         refresh();
       })
       .catch((err) => {
         console.log("error edit data", err);
+        toast.error(err.response.data.msg);
       });
   };
 
@@ -24,10 +27,8 @@ const EditProject = ({ refresh, data }) => {
     <div>
       <Modal isOpen={openDialog} setIsOpen={setOpenDialog}>
         <DialogTrigger asChild>
-          <div>
-            <Button variant="secondary" className>
-              Edit
-            </Button>
+          <div className="cursor-pointer">
+            <EditIcon size={25} />
           </div>
         </DialogTrigger>
         <ProjectModalContent

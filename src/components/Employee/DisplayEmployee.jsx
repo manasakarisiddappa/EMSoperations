@@ -46,49 +46,54 @@ function DisplayEmployee({ data, refresh }) {
   };
 
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center ">
       <Accordion type="single" collapsible className="w-1/2">
         {data?.map((emp) => (
           <AccordionItem key={emp.id} value={emp.id}>
             <AccordionTrigger onClick={() => handleAccordionChange(emp.id)}>
-              {emp.name} &nbsp; &nbsp; {emp.age}{" "}
+              <span>Name: {emp.name}</span>
             </AccordionTrigger>
             <AccordionContent>
               {loading && expandedId === emp.id ? (
                 <p>Loading...</p>
               ) : details[emp.id] ? (
-                <div className="flex flex-col gap-2 items-center text-lg">
-                  <div>
-                    <strong>Name:</strong> {details[emp.id].name}
-                  </div>
-                  <div>
-                    <strong>Age:</strong> {details[emp.id].age}
-                  </div>
-                  {details[emp.id].department ? (
-                    <div>
-                      <strong>Department:</strong>{" "}
-                      {details[emp.id].department.name}
+                <div className="grid gap-2 text-base ml-6">
+                  <div className="grid grid-cols-3 items-center gap-4">
+                    <div className="flex items-center gap-2">
+                      <strong>Name:</strong>
+                      <span>{details[emp.id].name}</span>
                     </div>
-                  ) : (
-                    ""
-                  )}
-                  {details[emp.id].projects.length ? (
-                    <div>
-                      <strong>Projects:</strong>
-
-                      {details[emp.id].projects.map((p) => (
-                        <span key={p.id}> {p.name} &nbsp;</span>
-                      ))}
+                    <div className="flex items-center w-max gap-2">
+                      <strong>Age:</strong>
+                      <span>{details[emp.id].age}</span>
                     </div>
-                  ) : (
-                    ""
-                  )}
-                  <div className="flex gap-3">
                     <EditEmployee
                       refresh={refresh}
                       refresh2={fetchEmp}
                       data={details[emp.id]}
                     />
+                  </div>
+                  <div className="grid grid-cols-3 items-center gap-4">
+                    <div className="flex items-center gap-2">
+                      {details[emp.id].department && (
+                        <>
+                          <strong>Department:</strong>
+                          <span>{details[emp.id].department.name}</span>
+                        </>
+                      )}
+                    </div>
+                    <div className="flex items-center  gap-2">
+                      {details[emp.id].projects.length > 0 && (
+                        <>
+                          <strong>Projects:</strong>
+                          <span className="flex gap-2">
+                            {details[emp.id].projects.map((p) => (
+                              <span key={p.id}>{p.name}</span>
+                            ))}
+                          </span>
+                        </>
+                      )}
+                    </div>
                     <DeleteEmployee refresh={refresh} id={emp.id} />
                   </div>
                 </div>

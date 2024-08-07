@@ -4,6 +4,7 @@ import Modal from "../Modal/Modal";
 import { DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "../ui/button";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 const CreateProject = ({ refresh }) => {
   const [openDialog, setOpenDialog] = useState(false);
@@ -12,11 +13,12 @@ const CreateProject = ({ refresh }) => {
     projApi
       .create(newdata)
       .then((res) => {
-        console.log(res.data);
+        toast.success(res.msg);
         refresh();
       })
       .catch((err) => {
         console.log("error edit data", err);
+        toast.error(err.response.data.msg);
       });
   };
 

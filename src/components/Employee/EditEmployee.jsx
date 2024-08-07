@@ -1,9 +1,10 @@
 import Modal from "../Modal/Modal";
 import { empApi } from "@/services/apiConfig";
-import { Button } from "../ui/button";
 import { DialogTrigger } from "../ui/dialog";
 import EmpModalContent from "./EmpModalContent";
 import { useState } from "react";
+import EditIcon from "../EditIcon/EditIcon";
+import { toast } from "react-toastify";
 
 const EditEmployee = ({ refresh, refresh2, data }) => {
   const [openDialog, setOpenDialog] = useState(false);
@@ -12,11 +13,13 @@ const EditEmployee = ({ refresh, refresh2, data }) => {
     empApi
       .update(id, newdata)
       .then((res) => {
+        toast.success(res.msg);
         console.log(res.data);
         refresh();
         refresh2();
       })
       .catch((err) => {
+        toast.error(err.response.data.msg);
         console.log("error edit data", err);
       });
   };
@@ -25,10 +28,8 @@ const EditEmployee = ({ refresh, refresh2, data }) => {
     <div>
       <Modal isOpen={openDialog} setIsOpen={setOpenDialog}>
         <DialogTrigger asChild>
-          <div>
-            <Button variant="secondary" className>
-              Edit
-            </Button>
+          <div className="cursor-pointer">
+            <EditIcon size={25} />
           </div>
         </DialogTrigger>
         <EmpModalContent

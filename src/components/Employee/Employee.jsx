@@ -6,8 +6,11 @@ import { empApi } from "@/services/apiConfig";
 const Employee = () => {
   const [employee, setEmployee] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const fetchData = () => {
+    setLoading(true);
+    setError("");
     empApi
       .getData()
       .then((res) => {
@@ -17,15 +20,21 @@ const Employee = () => {
       .catch((err) => {
         console.log("error fetching data", err);
         setLoading(false);
+        setError(err.response.data.msg);
       });
   };
 
   useEffect(() => {
-    setLoading(true);
     fetchData();
   }, []);
 
   if (loading) return <p>Loading...</p>;
+  if (error)
+    return (
+      <div>
+        <CreateEmployee refresh={fetchData} /> {error}...
+      </div>
+    );
 
   return (
     <>

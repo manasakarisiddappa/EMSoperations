@@ -4,13 +4,13 @@ import Modal from "../Modal/Modal";
 import {
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogFooter,
-  DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
 import { Button } from "../ui/button";
+import DeleteIcon from "../DeleteIcon/DeleteIcon";
+import { toast } from "react-toastify";
+import ModalHeader from "../Modal/ModalHeader";
 
 const DeleteDepartment = ({ id, refresh }) => {
   const [openDialog, setOpenDialog] = useState(false);
@@ -18,10 +18,12 @@ const DeleteDepartment = ({ id, refresh }) => {
     depApi
       .delete(id)
       .then((res) => {
+        toast.success(res.msg);
         console.log(res.msg);
         refresh();
       })
       .catch((err) => {
+        toast.error(err.response.data.msg);
         console.log("error deleting data", err);
       });
   };
@@ -30,18 +32,17 @@ const DeleteDepartment = ({ id, refresh }) => {
     <div>
       <Modal isOpen={openDialog} setIsOpen={setOpenDialog}>
         <DialogTrigger asChild>
-          <div>
-            <Button variant="destructive">Delete</Button>
+          <div className="cursor-pointer">
+            <DeleteIcon size={22} />
           </div>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Delete Department</DialogTitle>
-            <DialogDescription>
-              This action cannot be undone. This will permanently delete your
-              Department and remove it.
-            </DialogDescription>
-          </DialogHeader>
+          <ModalHeader
+            title="Delete Department"
+            description=" This action cannot be undone. This will permanently delete your
+              Department and remove it."
+          />
+
           <DialogFooter>
             <DialogClose asChild>
               <Button

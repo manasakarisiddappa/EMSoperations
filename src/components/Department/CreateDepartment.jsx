@@ -4,6 +4,7 @@ import Modal from "../Modal/Modal";
 import { DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "../ui/button";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 const CreateDepartment = ({ refresh }) => {
   const [openDialog, setOpenDialog] = useState(false);
@@ -12,10 +13,12 @@ const CreateDepartment = ({ refresh }) => {
     depApi
       .create(newdata)
       .then((res) => {
+        toast.success(res.msg);
         console.log(res.data);
         refresh();
       })
       .catch((err) => {
+        toast.error(err.response.data.msg);
         console.log("error edit data", err);
       });
   };

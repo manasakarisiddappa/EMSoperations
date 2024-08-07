@@ -4,13 +4,13 @@ import Modal from "../Modal/Modal";
 import {
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogFooter,
-  DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
 import { Button } from "../ui/button";
+import DeleteIcon from "../DeleteIcon/DeleteIcon";
+import { toast } from "react-toastify";
+import ModalHeader from "../Modal/ModalHeader";
 
 const DeleteProject = ({ id, refresh }) => {
   const [openDialog, setOpenDialog] = useState(false);
@@ -18,11 +18,12 @@ const DeleteProject = ({ id, refresh }) => {
     projApi
       .delete(id)
       .then((res) => {
-        console.log(res.msg);
+        toast.success(res.msg);
         refresh();
       })
       .catch((err) => {
         console.log("error deleting data", err);
+        toast.error(err.response.data.msg);
       });
   };
 
@@ -30,18 +31,16 @@ const DeleteProject = ({ id, refresh }) => {
     <div>
       <Modal isOpen={openDialog} setIsOpen={setOpenDialog}>
         <DialogTrigger asChild>
-          <div>
-            <Button variant="destructive">Delete</Button>
+          <div className="cursor-pointer">
+            <DeleteIcon size={22} />
           </div>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Delete Project</DialogTitle>
-            <DialogDescription>
-              This action cannot be undone. This will permanently delete your
-              Project and remove it.
-            </DialogDescription>
-          </DialogHeader>
+          <ModalHeader
+            title="Delete Project"
+            description="This action cannot be undone. This will permanently delete your
+              Project and remove it."
+          />
           <DialogFooter>
             <DialogClose asChild>
               <Button

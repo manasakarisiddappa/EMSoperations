@@ -5,11 +5,9 @@ import { Button } from "../ui/button";
 import {
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogFooter,
-  DialogHeader,
-  DialogTitle,
 } from "@/components/ui/dialog";
+import ModalHeader from "../Modal/ModalHeader";
 
 const ProjectModalContent = ({ handleOperation, setIsOpen, data }) => {
   const [newProj, setNewProj] = useState("");
@@ -48,12 +46,10 @@ const ProjectModalContent = ({ handleOperation, setIsOpen, data }) => {
   return (
     <>
       <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>{data ? "Edit" : "New"} Project</DialogTitle>
-          <DialogDescription>
-            Provide Project name & Click save when youre done.
-          </DialogDescription>
-        </DialogHeader>
+        <ModalHeader
+          title={data ? "Edit Project" : "New Project"}
+          description="Provide Project name & Click save when youre done."
+        />
 
         <div className="grid gap-4 py-4">
           {errors.name && (
