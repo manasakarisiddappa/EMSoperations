@@ -8,9 +8,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import EditProject from "./EditProject";
 import { projApi } from "@/services/apiConfig";
 import DeleteEntity from "../CRUDOperations/DeleteEntity";
+import ProjectModalContent from "./ProjectModalContent";
+import EditEntity from "../CRUDOperations/EditEntity";
 
 const ProjectTable = ({ data, refresh }) => {
   return (
@@ -31,7 +32,15 @@ const ProjectTable = ({ data, refresh }) => {
               <TableCell>{project.id} </TableCell>
               <TableCell>{project.name} </TableCell>
               <TableCell>
-                <EditProject refresh={refresh} data={project} />{" "}
+                <EditEntity
+                  api={projApi}
+                  refresh={refresh}
+                  data={project}
+                  ModalContent={ProjectModalContent}
+                  title="Edit Project"
+                />
+
+                {/* <EditProject refresh={refresh} data={project} />{" "} */}
               </TableCell>
               <TableCell>
                 <DeleteEntity

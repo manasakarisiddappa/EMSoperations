@@ -16,17 +16,22 @@ const fields = [
   // Add more fields as needed
 ];
 
-const EmpModalContent = ({ handleOperation, data, setIsOpen }) => {
+const EmpModalContent = ({ handleOperation, data, setIsOpen, isOpen }) => {
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    if (data) {
-      if (data.projects.length)
-        setFormData({ ...data, ["project_id"]: data.projects[0]?.id });
-      else setFormData(data);
+    if (isOpen && data) {
+      const initialData = data.projects?.length
+        ? { ...data, project_id: data.projects[0]?.id }
+        : data;
+      setFormData(initialData);
+    } else if (!isOpen) {
+      setFormData({});
     }
-  }, [data]);
+  }, [isOpen, data]);
+
+  console.log(formData);
 
   const validate = () => {
     let valid = true;
@@ -108,7 +113,7 @@ const EmpModalContent = ({ handleOperation, data, setIsOpen }) => {
                   api={depApi}
                   valueKey="id"
                   labelKey="name"
-                  defaultValue={formData[field.name] || ""}
+                  value={formData[field.name] || ""}
                   title="Departments"
                   name={field.name}
                   handleChange={handleChange}
@@ -121,11 +126,7 @@ const EmpModalContent = ({ handleOperation, data, setIsOpen }) => {
                   api={projApi}
                   valueKey="id"
                   labelKey="name"
-                  defaultValue={
-                    formData[field.name]?.length
-                      ? formData[field.name][0]?.id
-                      : "" || ""
-                  }
+                  value={formData["project_id"] || ""}
                   title="Projects"
                   name={field.name}
                   handleChange={handleChange}

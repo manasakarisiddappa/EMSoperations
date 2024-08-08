@@ -6,13 +6,17 @@ import { DialogContent, DialogFooter } from "@/components/ui/dialog";
 import ModalHeader from "../Modal/ModalHeader";
 import ModalCloseButton from "../Modal/ModalCloseButton";
 
-const ProjectModalContent = ({ handleOperation, setIsOpen, data }) => {
+const ProjectModalContent = ({ handleOperation, setIsOpen, data, isOpen }) => {
   const [newProj, setNewProj] = useState("");
   const [errors, setErrors] = useState("");
 
   useEffect(() => {
-    if (data) setNewProj(data.name);
-  }, [data]);
+    if (isOpen && data) {
+      setNewProj(data.name);
+    } else if (!isOpen) {
+      setNewProj("");
+    }
+  }, [isOpen, data]);
 
   const validate = () => {
     let valid = true;

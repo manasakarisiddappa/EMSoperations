@@ -7,9 +7,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import EditDepartment from "./EditDepartment";
 import DeleteEntity from "../CRUDOperations/DeleteEntity";
 import { depApi } from "@/services/apiConfig";
+import EditEntity from "../CRUDOperations/EditEntity";
+import DepModalContent from "./DepModalContent";
 
 const DepartmentTable = ({ data, refresh }) => {
   return (
@@ -30,7 +31,14 @@ const DepartmentTable = ({ data, refresh }) => {
               <TableCell className=" text-left">{dep.id} </TableCell>
               <TableCell className=" text-left">{dep.name} </TableCell>
               <TableCell className="justify-center items-center">
-                <EditDepartment refresh={refresh} data={dep} />{" "}
+                {/* <EditDepartment refresh={refresh} data={dep} />{" "} */}
+                <EditEntity
+                  api={depApi}
+                  refresh={refresh}
+                  data={dep}
+                  ModalContent={DepModalContent}
+                  title="Edit Department"
+                />
               </TableCell>
               <TableCell className="justify-center items-center">
                 <DeleteEntity
@@ -40,7 +48,6 @@ const DepartmentTable = ({ data, refresh }) => {
                   title="Delete Department"
                   description="This action cannot be undone. This will permanently delete your Department and remove it."
                 />
-                {/* <DeleteDepartment id={dep.id} refresh={refresh} />{" "} */}
               </TableCell>
             </TableRow>
           ))}

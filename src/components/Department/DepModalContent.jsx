@@ -6,13 +6,17 @@ import { DialogContent, DialogFooter } from "@/components/ui/dialog";
 import ModalHeader from "../Modal/ModalHeader";
 import ModalCloseButton from "../Modal/ModalCloseButton";
 
-const DepModalContent = ({ handleOperation, setIsOpen, data }) => {
+const DepModalContent = ({ handleOperation, setIsOpen, data, isOpen }) => {
   const [newDep, setNewDep] = useState("");
   const [errors, setErrors] = useState("");
 
   useEffect(() => {
-    if (data) setNewDep(data.name);
-  }, [data]);
+    if (isOpen && data) {
+      setNewDep(data.name);
+    } else if (!isOpen) {
+      setNewDep("");
+    }
+  }, [isOpen, data]);
 
   const validate = () => {
     let valid = true;
@@ -32,10 +36,6 @@ const DepModalContent = ({ handleOperation, setIsOpen, data }) => {
 
       handleDialogClose();
     }
-  };
-
-  const handleOnFocus = () => {
-    setErrors("");
   };
 
   const handleDialogClose = () => {
@@ -64,7 +64,6 @@ const DepModalContent = ({ handleOperation, setIsOpen, data }) => {
             </Label>
             <Input
               id="name"
-              onFocus={handleOnFocus}
               value={newDep}
               className="col-span-3"
               onChange={(e) => setNewDep(e.target.value)}

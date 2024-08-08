@@ -6,8 +6,9 @@ import {
 } from "@/components/ui/accordion";
 import { empApi } from "@/services/apiConfig";
 import { useEffect, useState } from "react";
-import EditEmployee from "./EditEmployee";
 import DeleteEntity from "../CRUDOperations/DeleteEntity";
+import EditEntity from "../CRUDOperations/EditEntity";
+import EmpModalContent from "./EmpModalContent";
 
 function DisplayEmployee({ data, refresh }) {
   const [expandedId, setExpandedId] = useState(null);
@@ -68,11 +69,19 @@ function DisplayEmployee({ data, refresh }) {
                       <strong>Age:</strong>
                       <span>{details[emp.id].age}</span>
                     </div>
-                    <EditEmployee
+                    <EditEntity
+                      api={empApi}
                       refresh={refresh}
                       refresh2={fetchEmp}
                       data={details[emp.id]}
+                      ModalContent={EmpModalContent}
+                      title="Edit Employee"
                     />
+                    {/* <EditEmployee
+                      refresh={refresh}
+                      refresh2={fetchEmp}
+                      data={details[emp.id]}
+                    /> */}
                   </div>
                   <div className="grid grid-cols-3 items-center gap-4">
                     <div className="flex items-center gap-2">

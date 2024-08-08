@@ -13,7 +13,7 @@ export function SelectComponent({
   api,
   valueKey,
   labelKey,
-  defaultValue,
+  value,
   name,
   title,
   handleChange,
@@ -21,7 +21,7 @@ export function SelectComponent({
   placeholder,
 }) {
   const [options, setOptions] = useState([]);
-  const [value, setValue] = useState(defaultValue);
+  //   const [value, setValue] = useState(defaultValue);
   const [error, setError] = useState("");
 
   const fetchData = useCallback(() => {
@@ -41,14 +41,19 @@ export function SelectComponent({
     if (!options.length) fetchData();
   }, [options, fetchData]);
 
+  //   useEffect(() => {
+  //     setValue(defaultValue);
+  //   }, [name, defaultValue]);
+
   const handleSelect = (e) => {
-    setValue(e);
     handleChange(name, e);
   };
 
+  console.log(value, "select value", name);
+
   return (
     <Select
-      defaultValue={value}
+      value={value}
       onValueChange={handleSelect}
       disabled={error ? true : false}
     >
