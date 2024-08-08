@@ -8,13 +8,20 @@ class ApiService {
 
   // Helper method to handle responses
   handleResponse(response) {
-    return response.data;
+    return {
+      success: true,
+      message: response.data.msg,
+      data: response.data.data,
+    };
   }
 
   // Helper method to handle errors
   handleError(error) {
-    console.error("API error:", error);
-    throw error;
+    const { response } = error;
+    return {
+      success: false,
+      message: response?.data?.msg || "An error occurred",
+    };
   }
 
   // Method to get a post by ID

@@ -2,12 +2,9 @@ import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "../ui/button";
-import {
-  DialogClose,
-  DialogContent,
-  DialogFooter,
-} from "@/components/ui/dialog";
+import { DialogContent, DialogFooter } from "@/components/ui/dialog";
 import ModalHeader from "../Modal/ModalHeader";
+import ModalCloseButton from "../Modal/ModalCloseButton";
 
 const ProjectModalContent = ({ handleOperation, setIsOpen, data }) => {
   const [newProj, setNewProj] = useState("");
@@ -70,15 +67,7 @@ const ProjectModalContent = ({ handleOperation, setIsOpen, data }) => {
           </div>
         </div>
         <DialogFooter>
-          <DialogClose asChild>
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={handleDialogClose}
-            >
-              Close
-            </Button>
-          </DialogClose>
+          <ModalCloseButton handleClose={handleDialogClose} />
           <Button type="submit" onClick={handleCreation}>
             Save changes
           </Button>

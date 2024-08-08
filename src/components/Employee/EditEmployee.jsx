@@ -4,24 +4,15 @@ import { DialogTrigger } from "../ui/dialog";
 import EmpModalContent from "./EmpModalContent";
 import { useState } from "react";
 import EditIcon from "../EditIcon/EditIcon";
-import { toast } from "react-toastify";
+import { handleApiResponse } from "@/utils/apiResponseHandler";
 
 const EditEmployee = ({ refresh, refresh2, data }) => {
   const [openDialog, setOpenDialog] = useState(false);
 
   const handleEdit = (id, newdata) => {
-    empApi
-      .update(id, newdata)
-      .then((res) => {
-        toast.success(res.msg);
-        console.log(res.data);
-        refresh();
-        refresh2();
-      })
-      .catch((err) => {
-        toast.error(err.response.data.msg);
-        console.log("error edit data", err);
-      });
+    empApi.update(id, newdata).then((res) => {
+      handleApiResponse(res, [refresh, refresh2]);
+    });
   };
 
   return (

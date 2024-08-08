@@ -17,19 +17,18 @@ function DisplayEmployee({ data, refresh }) {
   const fetchEmp = () => {
     if (expandedId !== null) {
       setLoading(true);
-      empApi
-        .getOneData(expandedId)
-        .then((res) => {
+      empApi.getOneData(expandedId).then((res) => {
+        if (res.success) {
           setDetails((prevDetails) => ({
             ...prevDetails,
             [expandedId]: res.data,
           }));
           setLoading(false);
-        })
-        .catch((error) => {
-          console.error("Error fetching employee details:", error);
+        } else {
+          console.error("Error fetching employee details:", res.message);
           setLoading(false);
-        });
+        }
+      });
     }
   };
 
@@ -44,6 +43,8 @@ function DisplayEmployee({ data, refresh }) {
       setExpandedId(id);
     }
   };
+
+  console.log(data);
 
   return (
     <div className="flex justify-center ">

@@ -1,31 +1,19 @@
 import { depApi } from "@/services/apiConfig";
 import { useState } from "react";
 import Modal from "../Modal/Modal";
-import {
-  DialogClose,
-  DialogContent,
-  DialogFooter,
-  DialogTrigger,
-} from "../ui/dialog";
+import { DialogContent, DialogFooter, DialogTrigger } from "../ui/dialog";
 import { Button } from "../ui/button";
 import DeleteIcon from "../DeleteIcon/DeleteIcon";
-import { toast } from "react-toastify";
 import ModalHeader from "../Modal/ModalHeader";
+import { handleApiResponse } from "@/utils/apiResponseHandler";
+import ModalCloseButton from "../Modal/ModalCloseButton";
 
 const DeleteDepartment = ({ id, refresh }) => {
   const [openDialog, setOpenDialog] = useState(false);
   const handleDelete = () => {
-    depApi
-      .delete(id)
-      .then((res) => {
-        toast.success(res.msg);
-        console.log(res.msg);
-        refresh();
-      })
-      .catch((err) => {
-        toast.error(err.response.data.msg);
-        console.log("error deleting data", err);
-      });
+    depApi.delete(id).then((res) => {
+      handleApiResponse(res, [refresh]);
+    });
   };
 
   return (
@@ -44,15 +32,7 @@ const DeleteDepartment = ({ id, refresh }) => {
           />
 
           <DialogFooter>
-            <DialogClose asChild>
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={() => setOpenDialog(false)}
-              >
-                Close
-              </Button>
-            </DialogClose>
+            <ModalCloseButton handleClose={() => setOpenDialog(false)} />
             <Button type="submit" variant="destructive" onClick={handleDelete}>
               Delete
             </Button>

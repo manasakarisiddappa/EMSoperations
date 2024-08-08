@@ -1,30 +1,19 @@
 import { projApi } from "@/services/apiConfig";
 import { useState } from "react";
 import Modal from "../Modal/Modal";
-import {
-  DialogClose,
-  DialogContent,
-  DialogFooter,
-  DialogTrigger,
-} from "../ui/dialog";
+import { DialogContent, DialogFooter, DialogTrigger } from "../ui/dialog";
 import { Button } from "../ui/button";
 import DeleteIcon from "../DeleteIcon/DeleteIcon";
-import { toast } from "react-toastify";
 import ModalHeader from "../Modal/ModalHeader";
+import { handleApiResponse } from "@/utils/apiResponseHandler";
+import ModalCloseButton from "../Modal/ModalCloseButton";
 
 const DeleteProject = ({ id, refresh }) => {
   const [openDialog, setOpenDialog] = useState(false);
   const handleDelete = () => {
-    projApi
-      .delete(id)
-      .then((res) => {
-        toast.success(res.msg);
-        refresh();
-      })
-      .catch((err) => {
-        console.log("error deleting data", err);
-        toast.error(err.response.data.msg);
-      });
+    projApi.delete(id).then((res) => {
+      handleApiResponse(res, [refresh]);
+    });
   };
 
   return (
@@ -42,15 +31,7 @@ const DeleteProject = ({ id, refresh }) => {
               Project and remove it."
           />
           <DialogFooter>
-            <DialogClose asChild>
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={() => setOpenDialog(false)}
-              >
-                Close
-              </Button>
-            </DialogClose>
+            <ModalCloseButton handleClose={() => setOpenDialog(false)} />
             <Button type="submit" variant="destructive" onClick={handleDelete}>
               Delete
             </Button>

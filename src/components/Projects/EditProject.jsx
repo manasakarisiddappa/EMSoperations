@@ -4,23 +4,15 @@ import { DialogTrigger } from "../ui/dialog";
 import ProjectModalContent from "./ProjectModalContent";
 import { useState } from "react";
 import EditIcon from "../EditIcon/EditIcon";
-import { toast } from "react-toastify";
+import { handleApiResponse } from "@/utils/apiResponseHandler";
 
 const EditProject = ({ refresh, data }) => {
   const [openDialog, setOpenDialog] = useState(false);
 
   const handleEdit = (id, newdata) => {
-    projApi
-      .update(id, newdata)
-      .then((res) => {
-        console.log(res.data);
-        toast.success(res.msg);
-        refresh();
-      })
-      .catch((err) => {
-        console.log("error edit data", err);
-        toast.error(err.response.data.msg);
-      });
+    projApi.update(id, newdata).then((res) => {
+      handleApiResponse(res, [refresh]);
+    });
   };
 
   return (

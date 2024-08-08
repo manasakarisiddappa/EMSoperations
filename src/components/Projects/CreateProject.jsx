@@ -4,22 +4,15 @@ import Modal from "../Modal/Modal";
 import { DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "../ui/button";
 import { useState } from "react";
-import { toast } from "react-toastify";
+import { handleApiResponse } from "@/utils/apiResponseHandler";
 
 const CreateProject = ({ refresh }) => {
   const [openDialog, setOpenDialog] = useState(false);
 
   const handleCreate = (newdata) => {
-    projApi
-      .create(newdata)
-      .then((res) => {
-        toast.success(res.msg);
-        refresh();
-      })
-      .catch((err) => {
-        console.log("error edit data", err);
-        toast.error(err.response.data.msg);
-      });
+    projApi.create(newdata).then((res) => {
+      handleApiResponse(res, [refresh]);
+    });
   };
 
   return (

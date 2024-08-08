@@ -4,23 +4,15 @@ import { DialogTrigger } from "../ui/dialog";
 import DepModalContent from "./DepModalContent";
 import { useState } from "react";
 import EditIcon from "../EditIcon/EditIcon";
-import { toast } from "react-toastify";
+import { handleApiResponse } from "@/utils/apiResponseHandler";
 
 const EditDepartment = ({ refresh, data }) => {
   const [openDialog, setOpenDialog] = useState(false);
 
   const handleEdit = (id, newdata) => {
-    depApi
-      .update(id, newdata)
-      .then((res) => {
-        toast.success(res.msg);
-        console.log(res.data);
-        refresh();
-      })
-      .catch((err) => {
-        toast.error(err.response.data.msg);
-        console.log("error edit data", err);
-      });
+    depApi.update(id, newdata).then((res) => {
+      handleApiResponse(res, [refresh]);
+    });
   };
 
   return (

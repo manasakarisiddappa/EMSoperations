@@ -11,17 +11,16 @@ const Employee = () => {
   const fetchData = () => {
     setLoading(true);
     setError("");
-    empApi
-      .getData()
-      .then((res) => {
+    empApi.getData().then((res) => {
+      if (res.success) {
         setEmployee(res.data);
         setLoading(false);
-      })
-      .catch((err) => {
-        console.log("error fetching data", err);
+      } else {
         setLoading(false);
-        setError(err.response.data.msg);
-      });
+        setError(res.message);
+        console.log("error creating data", res.message);
+      }
+    });
   };
 
   useEffect(() => {

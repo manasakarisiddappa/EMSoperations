@@ -1,20 +1,17 @@
 import { Button } from "@/components/ui/button";
-import {
-  DialogClose,
-  DialogContent,
-  DialogFooter,
-} from "@/components/ui/dialog";
+import { DialogContent, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { SelectDepartment } from "./SelectDepartment";
 import { fields } from "./EmpInputFields";
 import { SelectProject } from "./SelectProject";
 import ModalHeader from "../Modal/ModalHeader";
+import ModalCloseButton from "../Modal/ModalCloseButton";
 
 const EmpModalContent = ({ handleOperation, data, setIsOpen }) => {
   const [formData, setFormData] = useState({});
-  const [errors, setErrors] = useState("");
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (data) {
@@ -26,7 +23,7 @@ const EmpModalContent = ({ handleOperation, data, setIsOpen }) => {
 
   const validate = () => {
     let valid = true;
-    let errors = {};
+    let newErrors = { ...errors };
 
     fields.forEach((field) => {
       let value = formData[field.name];
@@ -34,16 +31,18 @@ const EmpModalContent = ({ handleOperation, data, setIsOpen }) => {
         value = formData["project_id"];
       }
       if (!value || (typeof value === "string" && value.trim() === "")) {
-        errors[field.name] = `${field.label} is required`;
-        valid = false;
+        if (!newErrors[field.name]) {
+          // Only add error if not already present
+          newErrors[field.name] = `${field.label} is required`;
+          valid = false;
+        }
       } else if (field.name === "age" && (value < 21 || value > 100)) {
-        errors[field.name] = `${field.label} must be between 21 and 100`;
+        newErrors[field.name] = `${field.label} must be between 21 and 100`;
         valid = false;
       }
     });
 
-    console.log(valid);
-    setErrors(errors);
+    setErrors(newErrors);
     return valid;
   };
 
@@ -72,7 +71,12 @@ const EmpModalContent = ({ handleOperation, data, setIsOpen }) => {
     else setFormData({ ...formData, [name]: value });
   };
 
-  console.log(formData, errors);
+  const handleSelectError = useCallback((name, message) => {
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: message,
+    }));
+  }, []);
 
   return (
     <div>
@@ -95,6 +99,7 @@ const EmpModalContent = ({ handleOperation, data, setIsOpen }) => {
                   depvalue={formData[field.name] || ""}
                   name={field.name}
                   handleChange={handleChange}
+                  handleSelectError={handleSelectError}
                   className="col-span-3"
                 />
               ) : field.name === "projects" ? (
@@ -106,6 +111,7 @@ const EmpModalContent = ({ handleOperation, data, setIsOpen }) => {
                   }
                   name={field.name}
                   handleChange={handleChange}
+                  handleSelectError={handleSelectError}
                   className="col-span-3"
                 />
               ) : (
@@ -128,18 +134,13 @@ const EmpModalContent = ({ handleOperation, data, setIsOpen }) => {
             </div>
           ))}
         </div>
-
         <DialogFooter>
-          <DialogClose asChild>
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={handleDialogClose}
-            >
-              Close
-            </Button>
-          </DialogClose>
-          <Button type="submit" onClick={handleCreation}>
+          <ModalCloseButton handleClose={handleDialogClose} />
+          <Button
+            type="submit"
+            onClick={handleCreation}
+            disabled={Object.values(errors).some((error) => error)}
+          >
             Save changes
           </Button>
         </DialogFooter>

@@ -4,23 +4,15 @@ import { DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "../ui/button";
 import EmpModalContent from "./EmpModalContent";
 import { empApi } from "@/services/apiConfig";
-import { toast } from "react-toastify";
+import { handleApiResponse } from "@/utils/apiResponseHandler";
 
 const CreateEmployee = ({ refresh }) => {
   const [openDialog, setOpenDialog] = useState(false);
 
   const handleCreate = (newdata) => {
-    empApi
-      .create(newdata)
-      .then((res) => {
-        toast.success(res.msg);
-        console.log(res.data);
-        refresh();
-      })
-      .catch((err) => {
-        toast.error(err.response.data.msg);
-        console.log("error edit data", err.response.data.msg);
-      });
+    empApi.create(newdata).then((res) => {
+      handleApiResponse(res, [refresh]);
+    });
   };
 
   return (

@@ -5,5 +5,3 @@ export const fields = [
   { name: "projects", label: "Projects", type: "select" },
   // Add more fields as needed
 ];
-
-export const edit = { name: "Bella", age: 24, department_id: 10 };

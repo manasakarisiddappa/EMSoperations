@@ -11,17 +11,16 @@ const Projects = () => {
   const fetchData = () => {
     setLoading(true);
     setError("");
-    projApi
-      .getData()
-      .then((res) => {
+    projApi.getData().then((res) => {
+      if (res.success) {
         setProjects(res.data);
         setLoading(false);
-      })
-      .catch((err) => {
-        console.log("error fetching data", err);
+      } else {
+        console.log("error fetching data", res.message);
         setLoading(false);
-        setError(err.response.data.msg);
-      });
+        setError(res.message);
+      }
+    });
   };
 
   useEffect(() => {

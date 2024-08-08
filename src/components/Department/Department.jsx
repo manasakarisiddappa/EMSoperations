@@ -11,17 +11,17 @@ const Department = () => {
   const fetchData = () => {
     setLoading(true);
     setError("");
-    depApi
-      .getData()
-      .then((res) => {
+    depApi.getData().then((res) => {
+      const message = res.message;
+      if (res.success) {
         setDepartments(res.data);
         setLoading(false);
-      })
-      .catch((err) => {
-        console.log("error fetching data", err);
+      } else {
+        console.log("error fetching data", message);
         setLoading(false);
-        setError(err.response.data.msg);
-      });
+        setError(message);
+      }
+    });
   };
 
   useEffect(() => {
