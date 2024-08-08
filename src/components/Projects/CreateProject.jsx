@@ -19,7 +19,7 @@ const CreateProject = ({ refresh }) => {
     <div>
       <Modal isOpen={openDialog} setIsOpen={setOpenDialog}>
         <DialogTrigger asChild>
-          <div className="flex justify-end mb-2">
+          <div className="w-max">
             <Button>Create</Button>
           </div>
         </DialogTrigger>

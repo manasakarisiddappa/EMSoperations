@@ -32,13 +32,18 @@ const Department = () => {
   if (error)
     return (
       <div>
-        <CreateDepartment refresh={fetchData} /> {error}...
+        <div className="flex justify-end mb-2">
+          <CreateDepartment refresh={fetchData} />
+        </div>{" "}
+        {error}...
       </div>
     );
 
   return (
     <>
-      <CreateDepartment refresh={fetchData} />
+      <div className="flex justify-end mb-2">
+        <CreateDepartment refresh={fetchData} />
+      </div>
       <div className="flex  justify-center min-w-screen ">
         <DepartmentTable data={departments} refresh={fetchData} />
       </div>

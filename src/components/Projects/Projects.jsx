@@ -31,13 +31,18 @@ const Projects = () => {
   if (error)
     return (
       <div>
-        <CreateProject refresh={fetchData} /> {error}...
+        <div className="flex justify-end mb-2">
+          <CreateProject refresh={fetchData} />
+        </div>
+        {error}...
       </div>
     );
 
   return (
     <>
-      <CreateProject refresh={fetchData} />
+      <div className="flex justify-end mb-2">
+        <CreateProject refresh={fetchData} />
+      </div>
       <div className="flex  justify-center min-w-screen ">
         <ProjectTable data={projects} refresh={fetchData} />
       </div>

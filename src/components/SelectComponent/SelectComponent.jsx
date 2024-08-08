@@ -7,35 +7,39 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { depApi } from "@/services/apiConfig";
 import { useCallback, useEffect, useState } from "react";
 
-export function SelectDepartment({
-  depvalue,
+export function SelectComponent({
+  api,
+  valueKey,
+  labelKey,
+  defaultValue,
   name,
+  title,
   handleChange,
   handleSelectError,
+  placeholder,
 }) {
-  const [alldep, setAllDep] = useState([]);
-  const [value, setValue] = useState(depvalue);
+  const [options, setOptions] = useState([]);
+  const [value, setValue] = useState(defaultValue);
   const [error, setError] = useState("");
 
-  const getDepartment = useCallback(() => {
-    depApi.getData().then((res) => {
+  const fetchData = useCallback(() => {
+    api.getData().then((res) => {
       const message = res.message;
       if (res.success) {
-        setAllDep(res.data);
+        setOptions(res.data);
       } else {
         handleSelectError(name, message);
         setError(message);
-        console.log("error fetching the departments", message);
+        console.log(`Error fetching ${name}`, message);
       }
     });
-  }, [handleSelectError, name]);
+  }, [api, handleSelectError, name]);
 
   useEffect(() => {
-    if (!alldep.length) getDepartment();
-  }, [alldep]);
+    if (!options.length) fetchData();
+  }, [options, fetchData]);
 
   const handleSelect = (e) => {
     setValue(e);
@@ -49,14 +53,14 @@ export function SelectDepartment({
       disabled={error ? true : false}
     >
       <SelectTrigger className="w-max">
-        <SelectValue placeholder="Select a depeartment" />
+        <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          <SelectLabel>Departments</SelectLabel>
-          {alldep.map((d) => (
-            <SelectItem key={d.id} value={d.id}>
-              {d.name}
+          <SelectLabel>{title}</SelectLabel>
+          {options.map((option) => (
+            <SelectItem key={option[valueKey]} value={option[valueKey]}>
+              {option[labelKey]}
             </SelectItem>
           ))}
         </SelectGroup>

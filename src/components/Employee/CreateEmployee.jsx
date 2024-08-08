@@ -19,8 +19,8 @@ const CreateEmployee = ({ refresh }) => {
     <div>
       <Modal isOpen={openDialog} setIsOpen={setOpenDialog}>
         <DialogTrigger asChild>
-          <div className="flex justify-end mb-2">
-            <Button>Create</Button>
+          <div className="w-max">
+            <Button className="">Create</Button>
           </div>
         </DialogTrigger>
         <EmpModalContent

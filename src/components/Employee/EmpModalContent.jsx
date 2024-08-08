@@ -3,11 +3,18 @@ import { DialogContent, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useCallback, useEffect, useState } from "react";
-import { SelectDepartment } from "./SelectDepartment";
-import { fields } from "./EmpInputFields";
-import { SelectProject } from "./SelectProject";
 import ModalHeader from "../Modal/ModalHeader";
 import ModalCloseButton from "../Modal/ModalCloseButton";
+import { SelectComponent } from "../SelectComponent/SelectComponent";
+import { depApi, projApi } from "@/services/apiConfig";
+
+const fields = [
+  { name: "name", label: "Name", type: "text" },
+  { name: "age", label: "Age", type: "text" },
+  { name: "department_id", label: "Department", type: "select" },
+  { name: "projects", label: "Projects", type: "select" },
+  // Add more fields as needed
+];
 
 const EmpModalContent = ({ handleOperation, data, setIsOpen }) => {
   const [formData, setFormData] = useState({});
@@ -64,6 +71,8 @@ const EmpModalContent = ({ handleOperation, data, setIsOpen }) => {
     setFormData({});
   };
 
+  console.log(errors, formData);
+
   const handleChange = (name, value) => {
     if (errors[name]) setErrors({ ...errors, [name]: "" });
     if (name === "projects")
@@ -95,23 +104,33 @@ const EmpModalContent = ({ handleOperation, data, setIsOpen }) => {
                 {field.label}
               </Label>
               {field.name === "department_id" ? (
-                <SelectDepartment
-                  depvalue={formData[field.name] || ""}
+                <SelectComponent
+                  api={depApi}
+                  valueKey="id"
+                  labelKey="name"
+                  defaultValue={formData[field.name] || ""}
+                  title="Departments"
                   name={field.name}
                   handleChange={handleChange}
                   handleSelectError={handleSelectError}
+                  placeholder="Select a department"
                   className="col-span-3"
                 />
               ) : field.name === "projects" ? (
-                <SelectProject
-                  projvalue={
+                <SelectComponent
+                  api={projApi}
+                  valueKey="id"
+                  labelKey="name"
+                  defaultValue={
                     formData[field.name]?.length
                       ? formData[field.name][0]?.id
                       : "" || ""
                   }
+                  title="Projects"
                   name={field.name}
                   handleChange={handleChange}
                   handleSelectError={handleSelectError}
+                  placeholder="Select a project"
                   className="col-span-3"
                 />
               ) : (

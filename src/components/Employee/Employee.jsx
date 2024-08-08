@@ -31,13 +31,18 @@ const Employee = () => {
   if (error)
     return (
       <div>
-        <CreateEmployee refresh={fetchData} /> {error}...
+        <div className="flex justify-end mb-2">
+          <CreateEmployee refresh={fetchData} />
+        </div>
+        {error}...
       </div>
     );
 
   return (
     <>
-      <CreateEmployee refresh={fetchData} />
+      <div className="flex justify-end mb-2">
+        <CreateEmployee refresh={fetchData} />
+      </div>
       <DisplayEmployee data={employee} refresh={fetchData} />
     </>
   );
