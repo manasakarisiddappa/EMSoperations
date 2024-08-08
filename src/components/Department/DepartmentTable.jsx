@@ -7,8 +7,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import DeleteDepartment from "./DeleteDepartment";
 import EditDepartment from "./EditDepartment";
+import DeleteEntity from "../CRUDOperations/DeleteEntity";
+import { depApi } from "@/services/apiConfig";
 
 const DepartmentTable = ({ data, refresh }) => {
   return (
@@ -32,7 +33,14 @@ const DepartmentTable = ({ data, refresh }) => {
                 <EditDepartment refresh={refresh} data={dep} />{" "}
               </TableCell>
               <TableCell className="justify-center items-center">
-                <DeleteDepartment id={dep.id} refresh={refresh} />{" "}
+                <DeleteEntity
+                  entityApi={depApi}
+                  id={dep.id}
+                  refresh={refresh}
+                  title="Delete Department"
+                  description="This action cannot be undone. This will permanently delete your Department and remove it."
+                />
+                {/* <DeleteDepartment id={dep.id} refresh={refresh} />{" "} */}
               </TableCell>
             </TableRow>
           ))}

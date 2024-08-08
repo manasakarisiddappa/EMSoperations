@@ -1,4 +1,3 @@
-import { projApi } from "@/services/apiConfig";
 import { useState } from "react";
 import Modal from "../Modal/Modal";
 import { DialogContent, DialogFooter, DialogTrigger } from "../ui/dialog";
@@ -8,10 +7,11 @@ import ModalHeader from "../Modal/ModalHeader";
 import { handleApiResponse } from "@/utils/apiResponseHandler";
 import ModalCloseButton from "../Modal/ModalCloseButton";
 
-const DeleteProject = ({ id, refresh }) => {
+const DeleteEntity = ({ entityApi, id, refresh, title, description }) => {
   const [openDialog, setOpenDialog] = useState(false);
+
   const handleDelete = () => {
-    projApi.delete(id).then((res) => {
+    entityApi.delete(id).then((res) => {
       handleApiResponse(res, [refresh]);
     });
   };
@@ -25,11 +25,7 @@ const DeleteProject = ({ id, refresh }) => {
           </div>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
-          <ModalHeader
-            title="Delete Project"
-            description="This action cannot be undone. This will permanently delete your
-              Project and remove it."
-          />
+          <ModalHeader title={title} description={description} />
           <DialogFooter>
             <ModalCloseButton handleClose={() => setOpenDialog(false)} />
             <Button type="submit" variant="destructive" onClick={handleDelete}>
@@ -42,4 +38,4 @@ const DeleteProject = ({ id, refresh }) => {
   );
 };
 
-export default DeleteProject;
+export default DeleteEntity;

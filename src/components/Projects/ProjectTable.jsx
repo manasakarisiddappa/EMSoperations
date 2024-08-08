@@ -9,7 +9,8 @@ import {
 } from "@/components/ui/table";
 
 import EditProject from "./EditProject";
-import DeleteProject from "./DeleteProject";
+import { projApi } from "@/services/apiConfig";
+import DeleteEntity from "../CRUDOperations/DeleteEntity";
 
 const ProjectTable = ({ data, refresh }) => {
   return (
@@ -25,15 +26,22 @@ const ProjectTable = ({ data, refresh }) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data.map((dep) => (
-            <TableRow key={dep.id}>
-              <TableCell>{dep.id} </TableCell>
-              <TableCell>{dep.name} </TableCell>
+          {data.map((project) => (
+            <TableRow key={project.id}>
+              <TableCell>{project.id} </TableCell>
+              <TableCell>{project.name} </TableCell>
               <TableCell>
-                <EditProject refresh={refresh} data={dep} />{" "}
+                <EditProject refresh={refresh} data={project} />{" "}
               </TableCell>
               <TableCell>
-                <DeleteProject id={dep.id} refresh={refresh} />{" "}
+                <DeleteEntity
+                  entityApi={projApi}
+                  id={project.id}
+                  refresh={refresh}
+                  title="Delete Project"
+                  description="This action cannot be undone. This will permanently delete your Project and remove it."
+                />
+                {/* <DeleteProject id={project.id} refresh={refresh} />{" "} */}
               </TableCell>
             </TableRow>
           ))}

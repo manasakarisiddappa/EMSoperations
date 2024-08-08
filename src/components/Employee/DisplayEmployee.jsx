@@ -7,7 +7,7 @@ import {
 import { empApi } from "@/services/apiConfig";
 import { useEffect, useState } from "react";
 import EditEmployee from "./EditEmployee";
-import DeleteEmployee from "./DeleteEmployee";
+import DeleteEntity from "../CRUDOperations/DeleteEntity";
 
 function DisplayEmployee({ data, refresh }) {
   const [expandedId, setExpandedId] = useState(null);
@@ -95,7 +95,13 @@ function DisplayEmployee({ data, refresh }) {
                         </>
                       )}
                     </div>
-                    <DeleteEmployee refresh={refresh} id={emp.id} />
+                    <DeleteEntity
+                      entityApi={empApi}
+                      id={emp.id}
+                      refresh={refresh}
+                      title="Delete Employee"
+                      description="This action cannot be undone. This will permanently delete your Employee and remove it."
+                    />
                   </div>
                 </div>
               ) : (
