@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { projApi } from "@/services/apiConfig";
-import CreateProject from "./CreateProject";
 import ProjectTable from "./ProjectTable";
+import CreateEntity from "../CRUDOperations/CreateEntity";
+import ProjectModalContent from "./ProjectModalContent";
 
 const Projects = () => {
   const [projects, setProjects] = useState([]);
@@ -32,7 +33,12 @@ const Projects = () => {
     return (
       <div>
         <div className="flex justify-end mb-2">
-          <CreateProject refresh={fetchData} />
+          <CreateEntity
+            entityApi={projApi}
+            ModalContent={ProjectModalContent}
+            refresh={fetchData}
+            buttonLabel="Create Project"
+          />
         </div>
         {error}...
       </div>
@@ -41,7 +47,12 @@ const Projects = () => {
   return (
     <>
       <div className="flex justify-end mb-2">
-        <CreateProject refresh={fetchData} />
+        <CreateEntity
+          entityApi={projApi}
+          ModalContent={ProjectModalContent}
+          refresh={fetchData}
+          buttonLabel="Create Project"
+        />
       </div>
       <div className="flex  justify-center min-w-screen ">
         <ProjectTable data={projects} refresh={fetchData} />

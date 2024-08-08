@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import CreateEmployee from "./CreateEmployee";
 import DisplayEmployee from "./DisplayEmployee";
 import { empApi } from "@/services/apiConfig";
+import CreateEntity from "../CRUDOperations/CreateEntity";
+import EmpModalContent from "./EmpModalContent";
 
 const Employee = () => {
   const [employee, setEmployee] = useState([]);
@@ -32,7 +33,12 @@ const Employee = () => {
     return (
       <div>
         <div className="flex justify-end mb-2">
-          <CreateEmployee refresh={fetchData} />
+          <CreateEntity
+            entityApi={empApi}
+            ModalContent={EmpModalContent}
+            refresh={fetchData}
+            buttonLabel="Create Employee"
+          />
         </div>
         {error}...
       </div>
@@ -41,7 +47,12 @@ const Employee = () => {
   return (
     <>
       <div className="flex justify-end mb-2">
-        <CreateEmployee refresh={fetchData} />
+        <CreateEntity
+          entityApi={empApi}
+          ModalContent={EmpModalContent}
+          refresh={fetchData}
+          buttonLabel="Create Employee"
+        />
       </div>
       <DisplayEmployee data={employee} refresh={fetchData} />
     </>

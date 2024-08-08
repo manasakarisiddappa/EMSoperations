@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import CreateDepartment from "./CreateDepartment";
 import DepartmentTable from "./DepartmentTable";
 import { depApi } from "@/services/apiConfig";
+import DepModalContent from "./DepModalContent";
+import CreateEntity from "../CRUDOperations/CreateEntity";
 
 const Department = () => {
   const [departments, setDepartments] = useState([]);
@@ -33,7 +34,12 @@ const Department = () => {
     return (
       <div>
         <div className="flex justify-end mb-2">
-          <CreateDepartment refresh={fetchData} />
+          <CreateEntity
+            entityApi={depApi}
+            ModalContent={DepModalContent}
+            refresh={fetchData}
+            buttonLabel="Create Department"
+          />
         </div>{" "}
         {error}...
       </div>
@@ -42,7 +48,12 @@ const Department = () => {
   return (
     <>
       <div className="flex justify-end mb-2">
-        <CreateDepartment refresh={fetchData} />
+        <CreateEntity
+          entityApi={depApi}
+          ModalContent={DepModalContent}
+          refresh={fetchData}
+          buttonLabel="Create Department"
+        />
       </div>
       <div className="flex  justify-center min-w-screen ">
         <DepartmentTable data={departments} refresh={fetchData} />
