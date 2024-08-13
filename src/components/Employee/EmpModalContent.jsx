@@ -5,8 +5,8 @@ import { Label } from "@/components/ui/label";
 import { useCallback, useEffect, useState } from "react";
 import ModalHeader from "../Modal/ModalHeader";
 import ModalCloseButton from "../Modal/ModalCloseButton";
-import { SelectComponent } from "../SelectComponent/SelectComponent";
-import { depApi, projApi } from "@/services/apiConfig";
+import { MultiSelectWithCheckbox } from "../SelectMultipleComponent/SelectMultipleComponent";
+import GetDepartments from "../SelectComponent/GetDepartments";
 
 const fields = [
   { name: "name", label: "Name", type: "text" },
@@ -15,23 +15,31 @@ const fields = [
   { name: "projects", label: "Projects", type: "select" },
   // Add more fields as needed
 ];
+const MAX_PROJECTS = 3;
 
 const EmpModalContent = ({ handleOperation, data, setIsOpen, isOpen }) => {
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
+  const [projectNames, setProjectNames] = useState([]);
 
   useEffect(() => {
     if (isOpen && data) {
-      const initialData = data.projects?.length
-        ? { ...data, project_id: data.projects[0]?.id }
-        : data;
+      let initialData;
+
+      if (data.projects?.length) {
+        initialData = {
+          ...data,
+          project_ids: data.projects.map((project) => project.id),
+        };
+        setProjectNames(data.projects.map((project) => project.name));
+      } else {
+        initialData = data;
+      }
       setFormData(initialData);
     } else if (!isOpen) {
       setFormData({});
     }
   }, [isOpen, data]);
-
-  console.log(formData);
 
   const validate = () => {
     let valid = true;
@@ -40,14 +48,16 @@ const EmpModalContent = ({ handleOperation, data, setIsOpen, isOpen }) => {
     fields.forEach((field) => {
       let value = formData[field.name];
       if (field.name === "projects") {
-        value = formData["project_id"];
+        value = formData["project_ids"];
       }
-      if (!value || (typeof value === "string" && value.trim() === "")) {
-        if (!newErrors[field.name]) {
-          // Only add error if not already present
-          newErrors[field.name] = `${field.label} is required`;
-          valid = false;
-        }
+      if (
+        !value ||
+        (typeof value === "string" && value.trim() === "") ||
+        (typeof value === "object" && !value.length)
+      ) {
+        // Only add error if not already present
+        newErrors[field.name] = `${field.label} is required`;
+        valid = false;
       } else if (field.name === "age" && (value < 21 || value > 100)) {
         newErrors[field.name] = `${field.label} must be between 21 and 100`;
         valid = false;
@@ -74,15 +84,45 @@ const EmpModalContent = ({ handleOperation, data, setIsOpen, isOpen }) => {
     setIsOpen(false);
     setErrors({});
     setFormData({});
+    setProjectNames([]);
   };
 
-  console.log(errors, formData);
+  console.log(errors, formData, projectNames);
 
   const handleChange = (name, value) => {
     if (errors[name]) setErrors({ ...errors, [name]: "" });
-    if (name === "projects")
-      setFormData({ ...formData, ["project_id"]: value });
-    else setFormData({ ...formData, [name]: value });
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleCheckboxChange = (name, value, displayName, checked = false) => {
+    if (checked && formData[name]?.length >= MAX_PROJECTS) {
+      setErrors({
+        ...errors,
+        ["projects"]: `Cannot select more than ${MAX_PROJECTS} projects.`,
+      });
+      return;
+    } else {
+      setErrors({ ...errors, ["projects"]: "" });
+    }
+
+    const updatedProjectIds = checked
+      ? [...(formData[name] || []), value]
+      : formData[name].filter((id) => id !== value);
+
+    setFormData({ ...formData, [name]: updatedProjectIds });
+    setProjectNames(
+      checked
+        ? [...projectNames, displayName]
+        : projectNames.filter((name) => name !== displayName)
+    );
+  };
+
+  const handleDropdownClose = (isOpen) => {
+    if (!isOpen) {
+      if (errors["projects"] && formData["project_ids"]?.length) {
+        setErrors({ ...errors, ["projects"]: "" });
+      }
+    }
   };
 
   const handleSelectError = useCallback((name, message) => {
@@ -105,34 +145,49 @@ const EmpModalContent = ({ handleOperation, data, setIsOpen, isOpen }) => {
               key={field.name}
               className="grid grid-cols-4 items-center gap-4"
             >
+              {field.name === "projects" && projectNames.length ? (
+                <>
+                  <Label htmlFor={field.name} className="text-right col-span-1">
+                    Selected Projects
+                  </Label>
+
+                  <div className="text-sm col-start-2 col-end-5 flex items-center gap-2 text-clip">
+                    {projectNames.length
+                      ? projectNames.map((project) => (
+                          <span key={project}>{project}</span>
+                        ))
+                      : "none"}
+                  </div>
+                </>
+              ) : (
+                ""
+              )}
+              {errors[field.name] && (
+                <Label
+                  htmlFor={field.name}
+                  className="text-red-600 text-xs col-span-4 text-right"
+                >
+                  {errors[field.name]}
+                </Label>
+              )}
               <Label htmlFor={field.name} className="text-right col-span-1">
                 {field.label}
               </Label>
               {field.name === "department_id" ? (
-                <SelectComponent
-                  api={depApi}
-                  valueKey="id"
-                  labelKey="name"
+                <GetDepartments
                   value={formData[field.name] || ""}
-                  title="Departments"
                   name={field.name}
                   handleChange={handleChange}
                   handleSelectError={handleSelectError}
-                  placeholder="Select a department"
                   className="col-span-3"
                 />
               ) : field.name === "projects" ? (
-                <SelectComponent
-                  api={projApi}
-                  valueKey="id"
-                  labelKey="name"
-                  value={formData["project_id"] || ""}
-                  title="Projects"
-                  name={field.name}
-                  handleChange={handleChange}
+                <MultiSelectWithCheckbox
+                  name="project_ids"
+                  handleChange={handleCheckboxChange}
                   handleSelectError={handleSelectError}
-                  placeholder="Select a project"
-                  className="col-span-3"
+                  values={formData["project_ids"]}
+                  onDropdownClose={handleDropdownClose}
                 />
               ) : (
                 <Input
@@ -142,14 +197,6 @@ const EmpModalContent = ({ handleOperation, data, setIsOpen, isOpen }) => {
                   className="col-span-3"
                   onChange={(e) => handleChange(field.name, e.target.value)}
                 />
-              )}
-              {errors[field.name] && (
-                <Label
-                  htmlFor={field.name}
-                  className="text-red-600 text-xs col-span-4 text-right"
-                >
-                  {errors[field.name]}
-                </Label>
               )}
             </div>
           ))}

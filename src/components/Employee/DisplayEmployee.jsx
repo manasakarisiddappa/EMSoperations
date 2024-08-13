@@ -45,11 +45,9 @@ function DisplayEmployee({ data, refresh }) {
     }
   };
 
-  console.log(data);
-
   return (
     <div className="flex justify-center ">
-      <Accordion type="single" collapsible className="w-1/2">
+      <Accordion type="single" collapsible className="w-2/3">
         {data?.map((emp) => (
           <AccordionItem key={emp.id} value={emp.id}>
             <AccordionTrigger onClick={() => handleAccordionChange(emp.id)}>
@@ -59,13 +57,13 @@ function DisplayEmployee({ data, refresh }) {
               {loading && expandedId === emp.id ? (
                 <p>Loading...</p>
               ) : details[emp.id] ? (
-                <div className="grid gap-2 text-base ml-6">
-                  <div className="grid grid-cols-3 items-center gap-4">
-                    <div className="flex items-center gap-2">
+                <div className="grid gap-2 text-base ml-6 w-full">
+                  <div className="grid grid-cols-5 items-center gap-4">
+                    <div className="flex items-center gap-2 col-span-1">
                       <strong>Name:</strong>
                       <span>{details[emp.id].name}</span>
                     </div>
-                    <div className="flex items-center w-max gap-2">
+                    <div className="flex items-center w-max gap-2 col-span-3">
                       <strong>Age:</strong>
                       <span>{details[emp.id].age}</span>
                     </div>
@@ -76,15 +74,11 @@ function DisplayEmployee({ data, refresh }) {
                       data={details[emp.id]}
                       ModalContent={EmpModalContent}
                       title="Edit Employee"
+                      className="col-span-1"
                     />
-                    {/* <EditEmployee
-                      refresh={refresh}
-                      refresh2={fetchEmp}
-                      data={details[emp.id]}
-                    /> */}
                   </div>
-                  <div className="grid grid-cols-3 items-center gap-4">
-                    <div className="flex items-center gap-2">
+                  <div className="grid grid-cols-5 items-center gap-4">
+                    <div className="flex items-center gap-2 col-span-1">
                       {details[emp.id].department && (
                         <>
                           <strong>Department:</strong>
@@ -92,7 +86,7 @@ function DisplayEmployee({ data, refresh }) {
                         </>
                       )}
                     </div>
-                    <div className="flex items-center  gap-2">
+                    <div className="flex items-center  gap-2 col-span-3">
                       {details[emp.id].projects.length > 0 && (
                         <>
                           <strong>Projects:</strong>
@@ -105,6 +99,7 @@ function DisplayEmployee({ data, refresh }) {
                       )}
                     </div>
                     <DeleteEntity
+                      className="col-span-1"
                       entityApi={empApi}
                       id={emp.id}
                       refresh={refresh}
