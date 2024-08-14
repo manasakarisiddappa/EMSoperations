@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Modal from "../Modal/Modal";
+import Modal from "../CommonComponents/Modal/Modal";
 import { DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "../ui/button";
 import { handleApiResponse } from "@/utils/apiResponseHandler";

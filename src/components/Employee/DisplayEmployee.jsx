@@ -1,120 +1,132 @@
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { empApi } from "@/services/apiConfig";
 import { useEffect, useState } from "react";
-import DeleteEntity from "../CRUDOperations/DeleteEntity";
+import { empApi } from "@/services/apiConfig";
 import EditEntity from "../CRUDOperations/EditEntity";
+import DeleteEntity from "../CRUDOperations/DeleteEntity";
 import EmpModalContent from "./EmpModalContent";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import CustomHoverCard from "../CommonComponents/CustomHoverCard";
 
 function DisplayEmployee({ data, refresh }) {
-  const [expandedId, setExpandedId] = useState(null);
   const [details, setDetails] = useState({});
   const [loading, setLoading] = useState(false);
 
-  const fetchEmp = () => {
-    if (expandedId !== null) {
-      setLoading(true);
-      empApi.getOneData(expandedId).then((res) => {
+  const fetchAllDetails = async () => {
+    setLoading(true);
+    const detailsPromises = data.map((emp) => empApi.getOneData(emp.id));
+
+    Promise.all(detailsPromises).then((detailsResponses) => {
+      const allDetails = detailsResponses.reduce((acc, res, index) => {
         if (res.success) {
-          setDetails((prevDetails) => ({
-            ...prevDetails,
-            [expandedId]: res.data,
-          }));
-          setLoading(false);
+          acc[data[index].id] = res.data;
         } else {
           console.error("Error fetching employee details:", res.message);
-          setLoading(false);
         }
-      });
-    }
+        return acc;
+      }, {});
+      setDetails(allDetails);
+      setLoading(false);
+    });
   };
+
+  console.log(details);
 
   useEffect(() => {
-    if (!details[expandedId]) fetchEmp();
-  }, [expandedId]);
+    fetchAllDetails();
+  }, [data]);
 
-  const handleAccordionChange = (id) => {
-    if (expandedId === id) {
-      setExpandedId(null); // Collapse if the same item is clicked
-    } else {
-      setExpandedId(id);
-    }
-  };
+  if (loading) return <p>Loading...</p>;
 
   return (
-    <div className="flex justify-center ">
-      <Accordion type="single" collapsible className="w-2/3">
-        {data?.map((emp) => (
-          <AccordionItem key={emp.id} value={emp.id}>
-            <AccordionTrigger onClick={() => handleAccordionChange(emp.id)}>
-              <span>Name: {emp.name}</span>
-            </AccordionTrigger>
-            <AccordionContent>
-              {loading && expandedId === emp.id ? (
-                <p>Loading...</p>
-              ) : details[emp.id] ? (
-                <div className="grid gap-2 text-base ml-6 w-full">
-                  <div className="grid grid-cols-5 items-center gap-4">
-                    <div className="flex items-center gap-2 col-span-1">
-                      <strong>Name:</strong>
-                      <span>{details[emp.id].name}</span>
-                    </div>
-                    <div className="flex items-center w-max gap-2 col-span-3">
-                      <strong>Age:</strong>
-                      <span>{details[emp.id].age}</span>
-                    </div>
-                    <EditEntity
-                      api={empApi}
-                      refresh={refresh}
-                      refresh2={fetchEmp}
-                      data={details[emp.id]}
-                      ModalContent={EmpModalContent}
-                      title="Edit Employee"
-                      className="col-span-1"
-                    />
-                  </div>
-                  <div className="grid grid-cols-5 items-center gap-4">
-                    <div className="flex items-center gap-2 col-span-1">
-                      {details[emp.id].department && (
-                        <>
-                          <strong>Department:</strong>
-                          <span>{details[emp.id].department.name}</span>
-                        </>
-                      )}
-                    </div>
-                    <div className="flex items-center  gap-2 col-span-3">
-                      {details[emp.id].projects.length > 0 && (
-                        <>
-                          <strong>Projects:</strong>
-                          <span className="flex gap-2">
-                            {details[emp.id].projects.map((p) => (
-                              <span key={p.id}>{p.name}</span>
-                            ))}
-                          </span>
-                        </>
-                      )}
-                    </div>
-                    <DeleteEntity
-                      className="col-span-1"
-                      entityApi={empApi}
-                      id={emp.id}
-                      refresh={refresh}
-                      title="Delete Employee"
-                      description="This action cannot be undone. This will permanently delete your Employee and remove it."
-                    />
-                  </div>
-                </div>
-              ) : (
-                <p>No details available</p>
-              )}
-            </AccordionContent>
-          </AccordionItem>
-        ))}
-      </Accordion>
+    <div className="flex flex-wrap gap-4">
+      {data.length &&
+        data.map((emp) => {
+          const empDetails = details[emp.id];
+          return (
+            <Card key={emp.id} className="w-[420px]">
+              <div className="grid gap-2  box-border ">
+                {empDetails ? (
+                  <>
+                    <CardHeader>
+                      <div className="flex justify-between items-center  box-border capitalize">
+                        <div className="flex flex-col text-left gap-1">
+                          <CardTitle>{empDetails.name}</CardTitle>
+                          <CardDescription>Information</CardDescription>
+                        </div>
+                        <div className="flex gap-4">
+                          <EditEntity
+                            api={empApi}
+                            refresh={refresh}
+                            refresh2={() => fetchAllDetails(empDetails.id)}
+                            data={empDetails}
+                            ModalContent={EmpModalContent}
+                            title="Edit Employee"
+                          />
+                          <DeleteEntity
+                            entityApi={empApi}
+                            id={empDetails.id}
+                            refresh={refresh}
+                            title="Delete Employee"
+                            description="This action cannot be undone. This will permanently delete your Employee and remove it."
+                          />
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="capitalize truncate box-border ">
+                        <div className="grid grid-cols-5 gap-4 text-left">
+                          <p className="col-span-2">
+                            Name: <strong>{empDetails.name}</strong>
+                          </p>
+                          <p className="col-span-3">
+                            Age: <strong>{empDetails.age}</strong>
+                          </p>
+                        </div>
+                        <div className="grid grid-cols-5 gap-4 text-left mt-2">
+                          {empDetails.department && (
+                            <p className="col-span-2">
+                              Department:{" "}
+                              <strong> {empDetails.department.name} </strong>
+                            </p>
+                          )}
+                          {empDetails.projects.length > 0 && (
+                            <div className="col-span-3 flex items-center">
+                              Projects:{" "}
+                              <strong className="ml-1 truncate">
+                                {empDetails.projects[0].name}
+                              </strong>
+                              <CustomHoverCard
+                                triggerText={
+                                  <span className="flex items-center box-border">
+                                    {empDetails.projects.length > 1 && (
+                                      <span className="ml-1 text-gray-500">
+                                        +{empDetails.projects.length - 1} more
+                                      </span>
+                                    )}
+                                  </span>
+                                }
+                                items={empDetails.projects.map((p) => p.name)}
+                              />
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </>
+                ) : (
+                  <CardContent>
+                    <p>No details available</p>
+                  </CardContent>
+                )}
+              </div>
+            </Card>
+          );
+        })}
     </div>
   );
 }

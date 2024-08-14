@@ -39,8 +39,6 @@ const ProjectTable = ({ data, refresh }) => {
                   ModalContent={ProjectModalContent}
                   title="Edit Project"
                 />
-
-                {/* <EditProject refresh={refresh} data={project} />{" "} */}
               </TableCell>
               <TableCell>
                 <DeleteEntity
@@ -50,7 +48,6 @@ const ProjectTable = ({ data, refresh }) => {
                   title="Delete Project"
                   description="This action cannot be undone. This will permanently delete your Project and remove it."
                 />
-                {/* <DeleteProject id={project.id} refresh={refresh} />{" "} */}
               </TableCell>
             </TableRow>
           ))}

@@ -1,5 +1,5 @@
-import { DialogClose } from "../ui/dialog";
-import { Button } from "../ui/button";
+import { DialogClose } from "../../ui/dialog";
+import { Button } from "../../ui/button";
 
 const ModalCloseButton = ({ handleClose }) => {
   return (

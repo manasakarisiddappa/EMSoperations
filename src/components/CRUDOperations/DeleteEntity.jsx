@@ -1,11 +1,11 @@
 import { useState } from "react";
-import Modal from "../Modal/Modal";
+import Modal from "../CommonComponents/Modal/Modal";
 import { DialogContent, DialogFooter, DialogTrigger } from "../ui/dialog";
 import { Button } from "../ui/button";
-import DeleteIcon from "../DeleteIcon/DeleteIcon";
-import ModalHeader from "../Modal/ModalHeader";
+import DeleteIcon from "../Icons/DeleteIcon";
+import ModalHeader from "../CommonComponents/Modal/ModalHeader";
 import { handleApiResponse } from "@/utils/apiResponseHandler";
-import ModalCloseButton from "../Modal/ModalCloseButton";
+import ModalCloseButton from "../CommonComponents/Modal/ModalCloseButton";
 
 const DeleteEntity = ({ entityApi, id, refresh, title, description }) => {
   const [openDialog, setOpenDialog] = useState(false);

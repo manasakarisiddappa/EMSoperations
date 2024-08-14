@@ -3,8 +3,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "../ui/button";
 import { DialogContent, DialogFooter } from "@/components/ui/dialog";
-import ModalHeader from "../Modal/ModalHeader";
-import ModalCloseButton from "../Modal/ModalCloseButton";
+import ModalHeader from "../CommonComponents/Modal/ModalHeader";
+import ModalCloseButton from "../CommonComponents/Modal/ModalCloseButton";
 
 const DepModalContent = ({ handleOperation, setIsOpen, data, isOpen }) => {
   const [newDep, setNewDep] = useState("");

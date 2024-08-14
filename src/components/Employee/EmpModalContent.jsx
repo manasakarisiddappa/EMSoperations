@@ -3,16 +3,16 @@ import { DialogContent, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useCallback, useEffect, useState } from "react";
-import ModalHeader from "../Modal/ModalHeader";
-import ModalCloseButton from "../Modal/ModalCloseButton";
-import { MultiSelectWithCheckbox } from "../SelectMultipleComponent/SelectMultipleComponent";
-import GetDepartments from "../SelectComponent/GetDepartments";
+import ModalHeader from "../CommonComponents/Modal/ModalHeader";
+import ModalCloseButton from "../CommonComponents/Modal/ModalCloseButton";
+import GetDepartments from "../CommonComponents/SelectComponent/GetDepartments";
+import GetProjects from "../CommonComponents/SelectMultipleComponent/GetProject";
 
 const fields = [
   { name: "name", label: "Name", type: "text" },
   { name: "age", label: "Age", type: "text" },
   { name: "department_id", label: "Department", type: "select" },
-  { name: "projects", label: "Projects", type: "select" },
+  { name: "project_ids", label: "Projects", type: "select" },
   // Add more fields as needed
 ];
 const MAX_PROJECTS = 3;
@@ -47,9 +47,9 @@ const EmpModalContent = ({ handleOperation, data, setIsOpen, isOpen }) => {
 
     fields.forEach((field) => {
       let value = formData[field.name];
-      if (field.name === "projects") {
-        value = formData["project_ids"];
-      }
+      // if (field.name === "projects") {
+      //   value = formData["project_ids"];
+      // }
       if (
         !value ||
         (typeof value === "string" && value.trim() === "") ||
@@ -98,11 +98,11 @@ const EmpModalContent = ({ handleOperation, data, setIsOpen, isOpen }) => {
     if (checked && formData[name]?.length >= MAX_PROJECTS) {
       setErrors({
         ...errors,
-        ["projects"]: `Cannot select more than ${MAX_PROJECTS} projects.`,
+        [name]: `Cannot select more than ${MAX_PROJECTS} projects.`,
       });
       return;
     } else {
-      setErrors({ ...errors, ["projects"]: "" });
+      setErrors({ ...errors, [name]: "" });
     }
 
     const updatedProjectIds = checked
@@ -119,8 +119,8 @@ const EmpModalContent = ({ handleOperation, data, setIsOpen, isOpen }) => {
 
   const handleDropdownClose = (isOpen) => {
     if (!isOpen) {
-      if (errors["projects"] && formData["project_ids"]?.length) {
-        setErrors({ ...errors, ["projects"]: "" });
+      if (errors["project_ids"] && formData["project_ids"]?.length) {
+        setErrors({ ...errors, ["project_ids"]: "" });
       }
     }
   };
@@ -145,7 +145,7 @@ const EmpModalContent = ({ handleOperation, data, setIsOpen, isOpen }) => {
               key={field.name}
               className="grid grid-cols-4 items-center gap-4"
             >
-              {field.name === "projects" && projectNames.length ? (
+              {field.name === "project_ids" && projectNames.length ? (
                 <>
                   <Label htmlFor={field.name} className="text-right col-span-1">
                     Selected Projects
@@ -181,12 +181,12 @@ const EmpModalContent = ({ handleOperation, data, setIsOpen, isOpen }) => {
                   handleSelectError={handleSelectError}
                   className="col-span-3"
                 />
-              ) : field.name === "projects" ? (
-                <MultiSelectWithCheckbox
+              ) : field.name === "project_ids" ? (
+                <GetProjects
                   name="project_ids"
+                  values={formData["project_ids"]}
                   handleChange={handleCheckboxChange}
                   handleSelectError={handleSelectError}
-                  values={formData["project_ids"]}
                   onDropdownClose={handleDropdownClose}
                 />
               ) : (

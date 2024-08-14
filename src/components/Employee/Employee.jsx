@@ -46,7 +46,7 @@ const Employee = () => {
 
   return (
     <>
-      <div className="flex justify-end mb-2">
+      <div className="flex justify-end mb-4">
         <CreateEntity
           entityApi={empApi}
           ModalContent={EmpModalContent}

@@ -1,8 +1,8 @@
 import { useState } from "react";
-import Modal from "../Modal/Modal";
+import Modal from "../CommonComponents/Modal/Modal";
 import { DialogTrigger } from "../ui/dialog";
 import { handleApiResponse } from "@/utils/apiResponseHandler";
-import EditIcon from "../EditIcon/EditIcon";
+import EditIcon from "../Icons/EditIcon";
 
 const EditEntity = ({ api, refresh, refresh2, data, ModalContent, title }) => {
   const [openDialog, setOpenDialog] = useState(false);

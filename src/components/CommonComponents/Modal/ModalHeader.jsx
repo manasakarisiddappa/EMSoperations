@@ -1,4 +1,4 @@
-import { DialogDescription, DialogHeader, DialogTitle } from "../ui/dialog";
+import { DialogDescription, DialogHeader, DialogTitle } from "../../ui/dialog";
 
 const ModalHeader = ({ title, description }) => {
   return (

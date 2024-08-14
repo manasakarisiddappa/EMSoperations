@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -7,32 +6,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Checkbox } from "../ui/checkbox";
-import { projApi } from "@/services/apiConfig";
+import { Checkbox } from "../../ui/checkbox";
 
 export function MultiSelectWithCheckbox({
-  name,
+  options,
   values = [],
+  name,
   handleChange,
-  handleSelectError,
   onDropdownClose,
+  error,
 }) {
-  const [projects, setProjects] = useState([]);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    projApi.getData().then((res) => {
-      const message = res.message;
-      if (res.success) {
-        setProjects(res.data);
-      } else {
-        handleSelectError("projects", message);
-        setError(message);
-        console.log(`Error fetching `, message);
-      }
-    });
-  }, []);
-
   return (
     <Select disabled={error ? true : false} onOpenChange={onDropdownClose}>
       <SelectTrigger className="w-[180px]">
@@ -44,7 +27,7 @@ export function MultiSelectWithCheckbox({
       <SelectContent>
         <SelectGroup>
           <SelectLabel>Projects</SelectLabel>
-          {projects.map((item) => (
+          {options.map((item) => (
             <div key={item.id} className="flex items-center gap-2 ml-3">
               <Checkbox
                 id={item.id}
@@ -53,7 +36,6 @@ export function MultiSelectWithCheckbox({
                   handleChange(name, item.id, item.name, checked)
                 }
               />
-
               <label htmlFor={item.id}>{item.name}</label>
             </div>
           ))}
